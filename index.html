@@ -13,8 +13,27 @@
   <link
     href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=3">
+  <script src="app.js?v=3" defer></script>
+
+  <!-- Configuración PWA -->
+  <meta name="theme-color" content="#052d1d">
+
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <meta name="apple-mobile-web-app-title" content="Tamales Luz">
+
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Manifest -->
+  <link rel="manifest" href="./manifest.json">
+
+  <!-- Iconos -->
+  <link rel="icon" type="image/png" href="./assets/icons/icon-192.png">
+
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192.png">
 </head>
 
 <body>
@@ -22,17 +41,9 @@
     <header class="app-header">
       <button class="icon-button back-button" id="back-button" type="button" aria-label="Volver" hidden>‹</button>
       <a class="brand" id="brand-home" href="#inicio" aria-label="Tamales Tolimenses, inicio">
-        <span class="brand-leaf" aria-hidden="true">
-          <svg viewBox="0 0 42 42">
-            <path d="M20 35C20 23 23 11 36 4c0 14-5 25-16 31Z" fill="#a3e64d" />
-            <path d="M19 34C17 22 10 14 3 13c0 11 5 18 16 21Z" fill="#27bd66" />
-            <path d="M19 36 27 14" stroke="#efffc9" stroke-width="1.8" fill="none" stroke-linecap="round" />
-          </svg>
-        </span>
-        <span class="brand-copy">
-          <span class="brand-name">Tamales <em>Tolimenses</em></span>
-          <span class="brand-tagline">TRADICIÓN QUE SE DISFRUTA</span>
-        </span>
+        <div class="brand-copy" style="width: 160px;">
+          <img class="loguito" src="./assets/Logo.png" alt="">
+        </div>
       </a>
       <button class="icon-button menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menú"
         aria-expanded="false">
@@ -358,7 +369,51 @@
         <button type="button" data-go="location">Ubicación</button>
       </nav>
     </footer>
-  </div>
-</body>
+    </div>
 
+  <!-- MODAL DE CONFIRMACIÓN DEL PEDIDO -->
+  <div
+    class="order-modal-backdrop"
+    id="order-success-modal"
+    role="presentation"
+    hidden
+  >
+    <section
+      class="order-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="order-modal-title"
+      aria-describedby="order-modal-message"
+    >
+
+      <div class="order-modal-icon" aria-hidden="true">
+        ✓
+      </div>
+
+      <h2 id="order-modal-title">
+        ¡Pedido listo!
+      </h2>
+
+      <p id="order-modal-message">
+        Se abrió WhatsApp con los detalles de tu pedido.
+        Completa el envío desde WhatsApp.
+      </p>
+
+      <div class="order-modal-notice">
+        Tu pedido anterior se ha limpiado.
+        Ya puedes preparar uno nuevo.
+      </div>
+
+      <button
+        type="button"
+        class="order-modal-button"
+        id="order-modal-close"
+      >
+        Entendido
+      </button>
+
+    </section>
+  </div>
+
+</body>
 </html>

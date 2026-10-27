@@ -33,6 +33,7 @@ let quantities = {
   picante: 0
 };
 let currentScreen = "home";
+let orderModalTimeout = null;
 let storeStatus = { open: false, reason: "hours" };
 let demoMode = new URLSearchParams(window.location.search).get("demo") || "";
 let menuIsOpen = false;
@@ -565,87 +566,188 @@ function changeQuantity(delta) {
 
 }
 
+// Mostrar confirmación del pedido.
+function showOrderConfirmationModal() {
+
+  const modal = $("#order-success-modal");
+
+  if (!modal) return;
+
+  clearTimeout(orderModalTimeout);
+
+  modal.hidden = false;
+
+  document.body.classList.add("modal-open");
+
+  $("#order-modal-close").focus();
+
+  // Cerrar automáticamente después de 5 segundos.
+  orderModalTimeout = setTimeout(() => {
+    closeOrderConfirmationModal();
+  }, 5000);
+
+}
+
+
+// Cerrar el modal.
+function closeOrderConfirmationModal() {
+
+  const modal = $("#order-success-modal");
+
+  if (!modal) return;
+
+  modal.hidden = true;
+
+  document.body.classList.remove("modal-open");
+
+  clearTimeout(orderModalTimeout);
+
+  orderModalTimeout = null;
+
+}
+
+// ========================================
+// ENVIAR PEDIDO Y REINICIAR EL CARRITO
+// ========================================
+
 function sendWhatsAppOrder() {
 
+  // Verificar si el negocio está abierto.
   storeStatus = getStoreStatus();
 
-  normalizeSelection();
-
-  if (
-    !storeStatus.open ||
-    getTotalQuantity() <= 0
-  ) {
+  if (!storeStatus.open) {
 
     renderStatus();
-
-    showScreen(
-      storeStatus.open ? "product" : "closed"
-    );
+    showScreen("closed");
 
     return;
   }
 
-  const itemLines = [];
+  // Ajustar las cantidades según las existencias.
+  normalizeSelection();
 
-  // Agregar al mensaje todos los sabores seleccionados.
+  const totalQuantity = getTotalQuantity();
+
+  // Validar que exista al menos un producto.
+  if (totalQuantity <= 0) {
+
+    alert("Selecciona al menos un tamal para continuar.");
+
+    showScreen("product");
+
+    return;
+  }
+
+  // Obtener las indicaciones del cliente.
+  const notes = $("#order-notes").value.trim();
+
+  // Construir el mensaje del pedido.
+  const messageLines = [
+
+    "¡Hola! Quiero hacer un pedido de Ricos Tamales Luz:",
+
+    ""
+
+  ];
+
+  // Incluir cada sabor seleccionado.
   for (const type of ["normal", "picante"]) {
 
     const qty = quantities[type];
 
+    // Omitir los sabores que no fueron seleccionados.
     if (qty <= 0) continue;
 
     const product = getProduct(type);
 
     const variantLabel =
       product.variant ||
-      (type === "picante" ? "Picante" : "Normal");
+      (type === "normal" ? "Normal" : "Picante");
 
-    const price = getPrice(type);
+    const unitPrice = getPrice(type);
 
-    const subtotal = qty * price;
+    const subtotal = qty * unitPrice;
 
-    itemLines.push(
-      `• ${product.name} - ${variantLabel}`,
-      `  Cantidad: ${qty}`,
-      `  Precio por unidad: ${formatMoney(price)}`,
-      `  Subtotal: ${formatMoney(subtotal)}`
+    messageLines.push(
+      `• ${product.name} (${variantLabel}): ` +
+      `${qty} x ${formatMoney(unitPrice)} = ` +
+      `${formatMoney(subtotal)}`
     );
 
   }
 
-  const notes = $("#order-notes").value.trim();
-
-  const message = [
-    "¡Hola! Quiero hacer un pedido de Tamales Tolimenses:",
-
+  // Agregar el total del pedido.
+  messageLines.push(
     "",
+    `Total de unidades: ${totalQuantity}`,
+    `Total estimado: ${formatMoney(getOrderTotal())}`
+  );
 
-    ...itemLines,
+  // Agregar indicaciones, si existen.
+  if (notes) {
 
+    messageLines.push(
+      "",
+      `Indicaciones: ${notes}`
+    );
+
+  }
+
+  messageLines.push(
     "",
+    "Por favor, confirmen la disponibilidad y el valor del domicilio, si aplica."
+  );
 
-    `• Total de tamales: ${getTotalQuantity()}`,
+  const message = messageLines.join("\n");
 
-    `• Total estimado: ${formatMoney(getOrderTotal())}`,
-
-    ...(notes ? [`• Indicaciones: ${notes}`] : []),
-
-    "",
-
-    "¿Me confirman la disponibilidad y el valor del domicilio, si aplica?"
-
-  ].join("\n");
-
-  saveDraft();
-
+  // Preparar la dirección de WhatsApp.
   const whatsappUrl =
     `https://wa.me/${config.whatsapp}?text=${encodeURIComponent(message)}`;
 
+  // Abrir WhatsApp antes de realizar otras operaciones.
   window.open(
     whatsappUrl,
     "_blank",
     "noopener,noreferrer"
   );
+
+  // ========================================
+  // LIMPIAR EL PEDIDO ANTERIOR
+  // ========================================
+
+  // Eliminar el borrador guardado.
+  localStorage.removeItem(STORAGE_KEYS.draft);
+
+  // Reiniciar las cantidades.
+  quantities = {
+    normal: 0,
+    picante: 0
+  };
+
+  // Seleccionar el sabor inicial disponible.
+  selectedVariant =
+    getStock("normal") > 0
+      ? "normal"
+      : "picante";
+
+  // Dejar una unidad inicial, como en el formulario original.
+  if (getStock(selectedVariant) > 0) {
+
+    quantities[selectedVariant] = 1;
+
+  }
+
+  // Limpiar las indicaciones anteriores.
+  $("#order-notes").value = "";
+
+  // Actualizar los datos de la interfaz.
+  renderSummary();
+
+  // Regresar a la pantalla de inicio.
+  showScreen("home");
+
+  // Mostrar el modal de confirmación.
+  showOrderConfirmationModal();
 
 }
 
@@ -675,6 +777,39 @@ function bindEvents() {
   });
   $("#edit-order").addEventListener("click", () => showScreen("product"));
   $("#send-whatsapp").addEventListener("click", sendWhatsAppOrder);
+  // Cerrar el modal con el botón.
+$("#order-modal-close").addEventListener(
+  "click",
+  closeOrderConfirmationModal
+);
+
+
+// Cerrar el modal al pulsar fuera de la tarjeta.
+$("#order-success-modal").addEventListener(
+  "click",
+  event => {
+
+    if (event.target.id === "order-success-modal") {
+      closeOrderConfirmationModal();
+    }
+
+  }
+);
+
+
+// Cerrar el modal con Escape.
+document.addEventListener("keydown", event => {
+
+  if (
+    event.key === "Escape" &&
+    !$("#order-success-modal").hidden
+  ) {
+
+    closeOrderConfirmationModal();
+
+  }
+
+});
   $("#quantity-minus").addEventListener("click", () => changeQuantity(-1));
   $("#quantity-plus").addEventListener("click", () => changeQuantity(1));
   $("#order-notes").addEventListener("input", () => {
@@ -766,3 +901,190 @@ async function init() {
 }
 
 init();
+
+// ========================================
+// PWA: INSTALACIÓN Y SERVICE WORKER
+// ========================================
+
+function initPWA() {
+
+  const isStandalone =
+    window.matchMedia(
+      "(display-mode: standalone)"
+    ).matches ||
+    window.navigator.standalone === true;
+
+  // Si ya está instalada, no mostrar el botón.
+  if (isStandalone) {
+    registerServiceWorker();
+    return;
+  }
+
+  // Crear el botón flotante.
+  const installButton = document.createElement("button");
+
+  installButton.id = "pwa-install-btn";
+
+  installButton.className = "pwa-install-btn";
+
+  installButton.type = "button";
+
+  installButton.innerHTML = `
+        <span aria-hidden="true">↓</span>
+        Instalar aplicación
+    `;
+
+  installButton.setAttribute(
+    "aria-label",
+    "Instalar Ricos Tamales Luz"
+  );
+
+  document.body.appendChild(installButton);
+
+  let deferredPrompt = null;
+
+  // Registrar el evento sin mostrar el diálogo
+  // automáticamente. Se abrirá al pulsar el botón.
+  window.addEventListener(
+    "beforeinstallprompt",
+    event => {
+
+      event.preventDefault();
+
+      deferredPrompt = event;
+
+    }
+  );
+
+  // Acción del botón.
+  installButton.addEventListener(
+    "click",
+    async () => {
+
+      if (deferredPrompt) {
+
+        deferredPrompt.prompt();
+
+        const choice =
+          await deferredPrompt.userChoice;
+
+        deferredPrompt = null;
+
+        if (choice.outcome === "accepted") {
+
+          installButton.hidden = true;
+
+        }
+
+        return;
+      }
+
+      // iPhone y iPad: instalación manual desde Safari.
+      const isIOS =
+        /iphone|ipad|ipod/i.test(
+          window.navigator.userAgent
+        );
+
+      if (isIOS) {
+
+        alert(
+          "Para instalar Ricos Tamales Luz:\n\n" +
+          "1. Abre esta página en Safari.\n" +
+          "2. Pulsa el botón Compartir.\n" +
+          "3. Selecciona Añadir a pantalla de inicio.\n" +
+          "4. Confirma la instalación."
+        );
+
+        return;
+      }
+
+      alert(
+        "Para instalar Ricos Tamales Luz:\n\n" +
+        "Abre el menú de tu navegador y busca " +
+        "'Instalar aplicación' o 'Añadir a pantalla de inicio'.\n\n" +
+        "La opción depende del navegador y de que " +
+        "el sitio cumpla los requisitos de instalación PWA."
+      );
+
+    }
+  );
+
+  // Ocultar el botón cuando la instalación finalice.
+  window.addEventListener(
+    "appinstalled",
+    () => {
+
+      installButton.hidden = true;
+
+      deferredPrompt = null;
+
+    }
+  );
+
+  registerServiceWorker();
+
+}
+
+
+// ========================================
+// REGISTRO DEL SERVICE WORKER
+// ========================================
+
+function registerServiceWorker() {
+
+  if (!("serviceWorker" in navigator)) {
+
+    console.warn(
+      "Este navegador no admite Service Workers."
+    );
+
+    return;
+  }
+
+  const isSecureContext =
+    window.location.protocol === "https:" ||
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1";
+
+  if (!isSecureContext) {
+
+    console.warn(
+      "El PWA requiere HTTPS o un entorno local compatible."
+    );
+
+    return;
+  }
+
+  window.addEventListener("load", async () => {
+
+    try {
+
+      const registration =
+        await navigator.serviceWorker.register(
+          "./sw.js",
+          {
+            scope: "./"
+          }
+        );
+
+      console.log(
+        "PWA registrado correctamente:",
+        registration.scope
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Error al registrar el PWA:",
+        error
+      );
+
+    }
+
+  });
+
+}
+
+
+// Inicializar PWA.
+initPWA();
