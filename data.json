@@ -1,0 +1,48 @@
+{
+  "brand": {
+    "name": "Tamales",
+    "accent": "Tolimenses",
+    "tagline": "TRADICIÓN QUE SE DISFRUTA",
+    "description": "Tradición, sabor y calidad en cada bocado."
+  },
+  "whatsapp": "573181234567",
+  "address": "Calle 12 # 4-56, Ibagué, Tolima",
+  "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Calle%2012%20%234-56%2C%20Ibagu%C3%A9%2C%20Tolima",
+  "hours": {
+    "timezone": "America/Bogota",
+    "openDays": [
+      2,
+      4,
+      5,
+      6,
+      0
+    ],
+    "openDaysLabel": "Jueves a domingo",
+    "openHour": 0,
+    "closeHour": 22,
+    "openLabel": "12:00 a. m. – 10:00 p. m.",
+    "closedDaysLabel": "Lunes, martes y miércoles: cerrado."
+  },
+  "products": [
+    {
+      "type": "normal",
+      "name": "Tamal tolimense",
+      "variant": "Normal",
+      "price": 12000,
+      "stock": 18,
+      "active": true,
+      "description": "El sabor tradicional del Tolima, envuelto en hoja de plátano.",
+      "emoji": "🌿"
+    },
+    {
+      "type": "picante",
+      "name": "Tamal tolimense",
+      "variant": "Picante",
+      "price": 12000,
+      "stock": 12,
+      "active": true,
+      "description": "La receta tradicional con un toque de picante.",
+      "emoji": "🌶️"
+    }
+  ]
+}

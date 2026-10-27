@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#052d1d">
+  <meta name="description"
+    content="Pide tamales tolimenses normales o picantes. Consulta disponibilidad y haz tu pedido por WhatsApp.">
+  <title>Tamales Tolimenses | Tradición que se disfruta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600;1,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <button class="icon-button back-button" id="back-button" type="button" aria-label="Volver" hidden>‹</button>
+      <a class="brand" id="brand-home" href="#inicio" aria-label="Tamales Tolimenses, inicio">
+        <span class="brand-leaf" aria-hidden="true">
+          <svg viewBox="0 0 42 42">
+            <path d="M20 35C20 23 23 11 36 4c0 14-5 25-16 31Z" fill="#a3e64d" />
+            <path d="M19 34C17 22 10 14 3 13c0 11 5 18 16 21Z" fill="#27bd66" />
+            <path d="M19 36 27 14" stroke="#efffc9" stroke-width="1.8" fill="none" stroke-linecap="round" />
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <span class="brand-name">Tamales <em>Tolimenses</em></span>
+          <span class="brand-tagline">TRADICIÓN QUE SE DISFRUTA</span>
+        </span>
+      </a>
+      <button class="icon-button menu-toggle" id="menu-toggle" type="button" aria-label="Abrir menú"
+        aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="menu-panel" id="menu-panel" hidden>
+        <button type="button" data-go="home">Inicio</button>
+        <button type="button" data-go="product">Ver menú</button>
+        <button type="button" data-go="location">Ubicación</button>
+      </nav>
+    </header>
+
+    <main id="app-main">
+      <!-- Pantalla 1: inicio cuando el negocio está abierto -->
+      <section class="screen screen-home is-active" id="screen-home" aria-labelledby="home-title">
+        <div class="home-hero">
+          <img class="hero-photo" src="assets/tamal-hero.jpg" alt="Tamal tolimense servido en hoja de plátano">
+          <div class="hero-shade"></div>
+          <div class="home-hero-copy">
+            <p class="eyebrow eyebrow-light">EL AUTÉNTICO<br>SABOR DEL TOLIMA</p>
+            <h1 id="home-title">Tamales<br><em>Tolimenses</em></h1>
+            <p class="home-tagline">Tradición, sabor y calidad<br>en cada bocado.</p>
+            <div class="price-sticker">
+              <strong id="home-price">$12.000</strong>
+              <span>por unidad</span>
+            </div>
+          </div>
+          <div class="open-banner" id="home-status-banner">
+            <span class="banner-icon" id="home-status-icon" aria-hidden="true">▣</span>
+            <span class="banner-copy">
+              <strong id="home-status-title">ABIERTO AHORA</strong>
+              <small id="home-status-detail">Jueves a domingo · 7:00 a. m. – 10:00 p. m.</small>
+            </span>
+            <span class="banner-arrow" aria-hidden="true">›</span>
+          </div>
+          <span class="hero-leaf hero-leaf-one" aria-hidden="true"></span>
+          <span class="hero-leaf hero-leaf-two" aria-hidden="true"></span>
+        </div>
+
+        <div class="home-content">
+          <div class="feature-row">
+            <div class="feature">
+              <span class="feature-icon" aria-hidden="true">🌿</span>
+              <strong>Ingredientes<br>seleccionados</strong>
+            </div>
+            <div class="feature">
+              <span class="feature-icon" aria-hidden="true">★</span>
+              <strong>Receta<br>tradicional</strong>
+            </div>
+            <div class="feature">
+              <span class="feature-icon" aria-hidden="true">♥</span>
+              <strong>Hecho con<br>amor</strong>
+            </div>
+          </div>
+          <button class="round-next" id="home-menu-button" type="button" aria-label="Ver menú">↓</button>
+          <p class="home-instruction">Elige tu sabor favorito y arma tu pedido.</p>
+          <button class="button button-primary button-home-menu" id="home-cta" type="button">
+            Ver menú y pedir <span aria-hidden="true">↗</span>
+          </button>
+          <div class="home-location-mini" id="home-location">
+            <span class="mini-location-icon" aria-hidden="true">⌖</span>
+            <span><strong>Estamos en Ibagué</strong><small>Calle 12 # 4-56 · Tolima</small></span>
+            <button type="button" class="location-link" data-go="location">Ver ubicación</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pantalla 2: producto y personalización -->
+      <section class="screen screen-product" id="screen-product" aria-labelledby="product-heading" hidden>
+        <div class="screen-heading">
+          <span class="eyebrow">NUESTRO SABOR</span>
+          <h2 id="product-heading">Elige tu tamal</h2>
+          <p>Una receta tradicional, preparada para disfrutar.</p>
+        </div>
+        <article class="product-card">
+          <div class="product-photo-wrap">
+            <img src="assets/tamal-hero.jpg" alt="Tamal tolimense tradicional" class="product-photo">
+            <span class="photo-badge">Receta tradicional</span>
+          </div>
+          <div class="product-info">
+            <div class="product-title-line">
+              <div>
+                <span class="tiny-kicker">TAMAL TOLIMENSE</span>
+                <h3>Tamal tolimense</h3>
+              </div>
+              <div class="product-price"><strong id="product-price">$12.000</strong><small>c/u</small></div>
+            </div>
+            <p class="product-description">Arroz, carnes, verduras y el sabor casero que distingue al Tolima.</p>
+
+            <div class="field-heading">
+              <span>Escoge tu sabor</span>
+              <small>Selecciona una opción</small>
+            </div>
+            <div class="variant-selector" role="group" aria-label="Selecciona el sabor del tamal">
+              <button class="variant-option is-selected" type="button" data-variant="normal" aria-pressed="true">
+                <span class="variant-emoji" aria-hidden="true">🌶️</span>
+                <span class="variant-label"><strong>Normal</strong><small id="normal-stock-label">18
+                    disponibles</small></span>
+                <span class="variant-check" aria-hidden="true">✓</span>
+              </button>
+              <button class="variant-option" type="button" data-variant="picante" aria-pressed="false">
+                <span class="variant-emoji" aria-hidden="true">🌶️</span>
+                <span class="variant-label"><strong>Picante</strong><small id="picante-stock-label">12
+                    disponibles</small></span>
+                <span class="variant-check" aria-hidden="true">✓</span>
+              </button>
+            </div>
+
+            <div class="stock-line" id="selected-stock-line">
+              <span class="stock-dot" aria-hidden="true"></span>
+              <span id="selected-stock-text">18 unidades disponibles</span>
+            </div>
+
+            <div class="quantity-line">
+              <div class="quantity-label"><strong>Cantidad</strong><small>Máximo según existencias</small></div>
+              <div class="quantity-control">
+                <button id="quantity-minus" type="button" aria-label="Restar una unidad">−</button>
+                <output id="quantity-value" aria-live="polite">1</output>
+                <button id="quantity-plus" type="button" aria-label="Sumar una unidad">+</button>
+              </div>
+            </div>
+
+            <label class="notes-label" for="order-notes">Indicaciones <span>(opcional)</span></label>
+            <textarea id="order-notes" rows="2" maxlength="300"
+              placeholder="Ej.: sin ají, alguna indicación especial…"></textarea>
+
+            <button class="button button-primary button-full" id="continue-order" type="button">
+              Continuar con mi pedido <span aria-hidden="true">→</span>
+            </button>
+          </div>
+        </article>
+        <p class="small-disclaimer">La disponibilidad se muestra como demostración y puede cambiar.</p>
+      </section>
+
+      <!-- Pantalla 3: resumen y envío a WhatsApp -->
+      <section class="screen screen-summary" id="screen-summary" aria-labelledby="summary-heading" hidden>
+        <div class="screen-heading">
+          <span class="eyebrow">CASI LISTO</span>
+          <h2 id="summary-heading">Tu pedido</h2>
+          <p>Revisa los detalles antes de enviarlo.</p>
+        </div>
+        <div class="summary-items-wrap">
+
+          <div class="summary-items-heading">
+
+            <strong>Productos seleccionados</strong>
+
+            <button class="edit-order" id="edit-order" type="button" aria-label="Editar pedido">
+              ✎
+            </button>
+
+          </div>
+
+          <div class="summary-items" id="summary-items"></div>
+
+        </div>
+
+
+        <div class="summary-card">
+
+          <div class="summary-row">
+
+            <span>Total de unidades</span>
+
+            <strong id="summary-quantity">
+              1 unidad
+            </strong>
+
+          </div>
+
+
+          <div class="summary-total">
+
+            <span>Total estimado</span>
+
+            <strong id="summary-total">
+              $12.000
+            </strong>
+
+          </div>
+
+
+          <div class="summary-notes" id="summary-notes-wrap" hidden>
+
+            <span>Indicaciones</span>
+
+            <p id="summary-notes"></p>
+
+          </div>
+
+
+          <button class="button button-primary button-full whatsapp-button" id="send-whatsapp" type="button">
+
+            <span class="whatsapp-symbol" aria-hidden="true">◉</span>
+
+            Enviar pedido por WhatsApp
+
+            <span aria-hidden="true">↗</span>
+
+          </button>
+
+
+          <p class="summary-disclaimer">
+            El pedido se confirma por WhatsApp.
+            El domicilio, si aplica, se acuerda por ese medio.
+          </p>
+
+        </div>
+
+        <div class="summary-details">
+          <article class="info-row">
+            <span class="info-icon" aria-hidden="true">◷</span>
+            <div><strong>Horario de atención</strong>
+              <p>Jueves a domingo<br>7:00 a. m. – 10:00 p. m.</p>
+            </div>
+          </article>
+          <article class="info-row" id="summary-location">
+            <span class="info-icon" aria-hidden="true">⌖</span>
+            <div><strong>Ubicación</strong>
+              <p>Calle 12 # 4-56<br>Ibagué, Tolima</p>
+            </div>
+          </article>
+          <button class="map-button" type="button" data-go="location">Ver en Google Maps <span
+              aria-hidden="true">↗</span></button>
+        </div>
+      </section>
+
+      <!-- Pantalla 4/5: estado cerrado por horario o por agotamiento -->
+      <section class="screen screen-closed" id="screen-closed" aria-labelledby="closed-heading" hidden>
+        <div class="closed-hero">
+          <img src="assets/tamal-hero.jpg" alt="" class="closed-photo">
+          <div class="closed-overlay"></div>
+          <div class="closed-sign-wrap">
+            <span class="sign-rope sign-rope-left" aria-hidden="true"></span>
+            <span class="sign-rope sign-rope-right" aria-hidden="true"></span>
+            <div class="wood-sign">
+              <span class="sign-leaf" aria-hidden="true">✦</span>
+              <h2 id="closed-heading">CERRADO</h2>
+              <p id="closed-subtitle">¡Te esperamos pronto!</p>
+            </div>
+          </div>
+          <div class="closed-message">
+            <article class="closed-info">
+              <span class="closed-info-icon" id="closed-reason-icon" aria-hidden="true">▦</span>
+              <div>
+                <strong id="closed-reason-title">Nuestro horario de atención</strong>
+                <p id="closed-reason-detail">Atendemos de jueves a domingo, de 7:00 a. m. a 10:00 p. m.</p>
+              </div>
+            </article>
+            <article class="closed-info" id="closed-next-info">
+              <span class="closed-info-icon" aria-hidden="true">◷</span>
+              <div>
+                <strong id="next-open-title">Próxima apertura</strong>
+                <p id="next-open-detail">Jueves · 7:00 a. m.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="closed-content">
+          <div class="next-opening-card">
+            <span class="next-opening-clock" aria-hidden="true">◷</span>
+            <div><strong id="next-card-title">Te esperamos pronto</strong>
+              <p id="next-card-detail">Podrás hacer tu pedido en nuestro próximo horario de atención.</p>
+            </div>
+          </div>
+          <div class="closed-hours-location">
+            <article class="closed-detail">
+              <span class="detail-icon" aria-hidden="true">◷</span>
+              <div><strong>Horario de atención</strong>
+                <p>Jueves a domingo<br>7:00 a. m. – 10:00 p. m.</p>
+              </div>
+            </article>
+            <article class="closed-detail" id="closed-location">
+              <span class="detail-icon" aria-hidden="true">⌖</span>
+              <div><strong>Ubicación</strong>
+                <p>Calle 12 # 4-56<br>Ibagué, Tolima</p>
+              </div>
+            </article>
+          </div>
+          <a class="map-button map-anchor" id="closed-map-link" href="https://www.google.com/maps" target="_blank"
+            rel="noopener noreferrer">Ver en Google Maps <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <!-- Pantalla de ubicación -->
+      <section class="screen screen-location" id="screen-location" aria-labelledby="location-heading" hidden>
+        <div class="screen-heading">
+          <span class="eyebrow">ENCUÉNTRANOS</span>
+          <h2 id="location-heading">Nuestra ubicación</h2>
+          <p>El sabor tradicional del Tolima, cerca de ti.</p>
+        </div>
+        <div class="location-hero">
+          <span class="location-pin" aria-hidden="true">⌖</span>
+          <strong>Ibagué, Tolima</strong>
+          <p id="location-address">Calle 12 # 4-56</p>
+          <a class="button button-primary button-full" id="location-map-link" href="https://www.google.com/maps"
+            target="_blank" rel="noopener noreferrer">Abrir Google Maps ↗</a>
+        </div>
+        <article class="location-hours">
+          <span class="info-icon" aria-hidden="true">◷</span>
+          <div><strong>Horario de atención</strong>
+            <p>Jueves a domingo<br>7:00 a. m. – 10:00 p. m.</p><small>Lunes, martes y miércoles: cerrado.</small>
+          </div>
+        </article>
+        <button class="button button-outline button-full" id="location-back-menu" type="button">Volver al menú</button>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <a class="footer-brand" href="#inicio" data-go="home">
+        <span class="footer-leaf" aria-hidden="true">✦</span>
+        <span><strong>Tamales <em>Tolimenses</em></strong><small>TRADICIÓN QUE SE DISFRUTA</small></span>
+      </a>
+      <div class="footer-socials" aria-label="Contacto">
+        <a id="footer-whatsapp" href="https://wa.me/573181234567" target="_blank" rel="noopener noreferrer"
+          aria-label="WhatsApp">◉</a>
+        <span aria-label="Facebook">f</span>
+        <span aria-label="Instagram">◎</span>
+      </div>
+      <nav class="footer-nav" aria-label="Navegación inferior">
+        <button type="button" data-go="home">Inicio</button><span>·</span>
+        <button type="button" data-go="product">Producto</button><span>·</span>
+        <button type="button" data-go="location">Ubicación</button>
+      </nav>
+    </footer>
+  </div>
+</body>
+
+</html>
